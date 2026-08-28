@@ -1,0 +1,359 @@
+@media (max-width: 1120px) {
+  .site-nav a:not(.nav-cta) {
+    padding-inline: 9px;
+    font-size: 0.82rem;
+  }
+
+  .hero-inner {
+    grid-template-columns: 1fr 0.8fr;
+    gap: 38px;
+  }
+
+  .roadmap-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .year-card:nth-child(4),
+  .year-card:nth-child(5) {
+    min-height: 350px;
+  }
+
+  .source-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  :root {
+    --header-height: 70px;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  .site-nav {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: none;
+    align-items: stretch;
+    flex-direction: column;
+    gap: 3px;
+    padding: 22px;
+    background: rgba(251, 252, 249, 0.98);
+  }
+
+  .site-nav.is-open {
+    display: flex;
+  }
+
+  .site-nav a {
+    padding: 13px 14px;
+    font-size: 0.95rem;
+  }
+
+  .site-nav .nav-cta {
+    margin: 8px 0 0;
+    text-align: center;
+  }
+
+  .hero {
+    padding-top: 58px;
+  }
+
+  .hero-inner,
+  .brief-grid,
+  .governance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .outcome-panel {
+    max-width: 720px;
+  }
+
+  .section-heading {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .pillar-card:last-child:nth-child(odd) {
+    min-height: 330px;
+  }
+
+  .pillar-columns {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .value-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .target-rule {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .gantt-controls {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .gantt-actions {
+    width: 100%;
+  }
+
+  .icon-button {
+    flex: 1;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 740px) {
+  .container {
+    width: min(calc(100% - 28px), var(--container));
+  }
+
+  .brand-copy strong {
+    font-size: 0.84rem;
+  }
+
+  .brand-copy small {
+    font-size: 0.61rem;
+  }
+
+  .hero,
+  .section {
+    padding-block: 62px;
+  }
+
+  .page-hero {
+    padding-block: 46px 36px;
+  }
+
+  .hero h1,
+  .page-hero h1 {
+    font-size: clamp(2rem, 10.5vw, 3rem);
+  }
+
+  .hero-lead,
+  .page-hero .hero-lead {
+    font-size: 0.98rem;
+  }
+
+  .outcome-grid,
+  .plan-stats,
+  .asset-list,
+  .maturity-path,
+  .pillar-grid,
+  .value-grid,
+  .budget-guardrails,
+  .gantt-summary,
+  .gantt-footnotes {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .stat-card span {
+    margin: 0;
+    text-align: right;
+  }
+
+  .maturity-step:not(:last-child)::after {
+    display: none;
+  }
+
+  .pillar-card,
+  .pillar-card:last-child:nth-child(odd) {
+    min-height: auto;
+  }
+
+  .roadmap-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .year-card,
+  .year-card:nth-child(4),
+  .year-card:nth-child(5) {
+    min-height: auto;
+  }
+
+  .source-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-inner {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .footer-note {
+    text-align: left;
+  }
+
+  .gantt-section {
+    padding-top: 28px;
+  }
+
+  .gantt-controls {
+    padding: 12px;
+  }
+
+  .filter-group {
+    flex-wrap: nowrap;
+    width: 100%;
+    padding-bottom: 5px;
+    overflow-x: auto;
+  }
+
+  .filter-button {
+    flex: 0 0 auto;
+  }
+
+  .gantt-actions {
+    flex-wrap: wrap;
+  }
+
+  .gantt-scroller {
+    max-height: 70vh;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  @page {
+    size: A3 landscape;
+    margin: 8mm;
+  }
+
+  :root {
+    --task-col: 210px;
+    --quarter-width: 34px;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+    font-size: 10px;
+  }
+
+  .site-header,
+  .gantt-controls,
+  .gantt-legend,
+  .gantt-footnotes,
+  .site-footer,
+  .hero-actions,
+  .page-meta {
+    display: none !important;
+  }
+
+  .page-hero {
+    padding: 0 0 5mm;
+    border: 0;
+    background: none;
+  }
+
+  .page-hero h1 {
+    font-size: 23px;
+  }
+
+  .page-hero .hero-lead {
+    margin-top: 6px;
+    font-size: 10px;
+  }
+
+  .gantt-section {
+    padding: 0;
+  }
+
+  .gantt-summary {
+    display: none;
+  }
+
+  .gantt-shell {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .gantt-scroller {
+    max-height: none;
+    overflow: visible;
+  }
+
+  .gantt-year-row,
+  .gantt-quarter-row,
+  .gantt-header-label,
+  .gantt-task,
+  .gantt-group-label {
+    position: static;
+  }
+
+  .gantt-row {
+    min-height: 34px;
+  }
+
+  .gantt-task,
+  .quarter-cell {
+    min-height: 34px;
+  }
+
+  .gantt-task {
+    padding: 4px 6px;
+  }
+
+  .gantt-task strong {
+    font-size: 6.8px;
+  }
+
+  .gantt-task-meta {
+    display: none;
+  }
+
+  .gantt-bar {
+    height: 14px;
+    margin-inline: 2px;
+    border-radius: 3px;
+    box-shadow: none;
+  }
+
+  .gantt-bar span {
+    display: none;
+  }
+
+  .gantt-milestone {
+    width: 9px;
+    height: 9px;
+    box-shadow: none;
+  }
+
+  .gantt-milestone::after {
+    width: 3px;
+    height: 3px;
+  }
+
+  .gantt-year-row,
+  .gantt-quarter-row,
+  .gantt-group-row,
+  .gantt-row {
+    break-inside: avoid;
+  }
+}
