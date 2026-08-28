@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Gantt Chart 20 ไตรมาส สำหรับแผน Co-benefit โครงการปลูกป่าชายเลน ปีที่ 4–8">
+  <meta name="theme-color" content="#0d5b49">
+  <title>Implementation Gantt | Mangrove Co-benefit 2031</title>
+  <link rel="stylesheet" href="../assets/styles.css">
+  <script src="../assets/site.js" defer></script>
+  <script src="../assets/gantt.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">ข้ามไปยังเนื้อหา</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../" aria-label="Mangrove Co-benefit 2031 หน้าแรก">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 3.5c-2.7 4.4-2.4 8.3.8 11.6 3.5-3.3 3.7-7.4-.8-11.6Z" fill="#2f7a60"/>
+            <path d="M8.2 8.6c.1 4.7 2.2 7.8 6.6 9.2.9-4.8-1.5-8-6.6-9.2Z" fill="#0d5b49"/>
+            <path d="M23.8 8.6c-.1 4.7-2.2 7.8-6.6 9.2-.9-4.8 1.5-8 6.6-9.2Z" fill="#5d9a73"/>
+            <path d="M16 15.5v12.2M16 20.1l-5.3 7.6M16 20.1l5.3 7.6M16 23.1l-2.6 4.6M16 23.1l2.6 4.6" stroke="#12332d" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span class="brand-copy">
+          <strong>CO-BENEFIT 2031</strong>
+          <small>Mangrove Beyond Carbon</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="เปิดเมนู">
+        <span></span>
+      </button>
+
+      <nav class="site-nav" id="site-nav" aria-label="เมนูหลัก">
+        <a href="../#overview">ภาพรวม</a>
+        <a href="../#pillars">ยุทธศาสตร์</a>
+        <a href="../#roadmap">แผน 5 ปี</a>
+        <a href="../#kpi">ตัวชี้วัด</a>
+        <a href="../#governance">ธรรมาภิบาล</a>
+        <a class="nav-cta" href="./" aria-current="page">Gantt Chart</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container">
+        <p class="eyebrow">Implementation roadmap · Project years 4–8</p>
+        <h1>Gantt Chart <span class="accent">20 ไตรมาส</span> สำหรับเปลี่ยน Co-benefit ให้เกิดขึ้นจริง</h1>
+        <p class="hero-lead">
+          แผนเริ่มวันที่ 28 สิงหาคม 2569 และสิ้นสุดวันที่ 27 สิงหาคม 2574 โดยจัดงานเป็น 5 Workstream
+          งานที่เป็น Baseline และ Governance มาก่อนการตั้งเป้าหมายหรือการสื่อสารผลลัพธ์ ส่วนกิจกรรมที่ต้องขยายจะผ่าน Pilot และ Decision Gate ก่อนเสมอ
+        </p>
+        <div class="page-meta">
+          <span class="meta-chip">เริ่ม: 28 ส.ค. 2569</span>
+          <span class="meta-chip">สิ้นสุด: 27 ส.ค. 2574</span>
+          <span class="meta-chip">Project Year 4–8</span>
+          <span class="meta-chip">แยกจาก Carbon Credit MRV</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="gantt-section">
+      <div class="container">
+        <div class="gantt-summary" aria-label="สรุป Gantt Chart">
+          <div class="gantt-summary-card">
+            <strong>5 ปี</strong>
+            <span>จาก Foundation สู่ Legacy</span>
+          </div>
+          <div class="gantt-summary-card">
+            <strong>20 ไตรมาส</strong>
+            <span>ใช้รอบปีโครงการ ไม่ใช่ปีปฏิทิน</span>
+          </div>
+          <div class="gantt-summary-card">
+            <strong>5 Workstreams</strong>
+            <span>Governance · Nature · Community · Learning · Business</span>
+          </div>
+          <div class="gantt-summary-card">
+            <strong id="task-count">–</strong>
+            <span>Work packages และจุดตรวจหลัก</span>
+          </div>
+        </div>
+
+        <div class="gantt-controls">
+          <div class="filter-group" role="group" aria-label="กรอง Workstream">
+            <button class="filter-button" type="button" data-filter="all" aria-pressed="true" style="--filter-color:#12332d">ทั้งหมด</button>
+            <button class="filter-button" type="button" data-filter="governance" aria-pressed="false" style="--filter-color:#a85d4e">Governance</button>
+            <button class="filter-button" type="button" data-filter="nature" aria-pressed="false" style="--filter-color:#2f7a60">Nature</button>
+            <button class="filter-button" type="button" data-filter="community" aria-pressed="false" style="--filter-color:#c9822b">Community</button>
+            <button class="filter-button" type="button" data-filter="learning" aria-pressed="false" style="--filter-color:#2e7180">Learning</button>
+            <button class="filter-button" type="button" data-filter="business" aria-pressed="false" style="--filter-color:#785b7d">Business</button>
+          </div>
+          <div class="gantt-actions">
+            <button class="icon-button" id="scroll-start" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m14.5 6-6 6 6 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 5v14" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+              กลับจุดเริ่ม
+            </button>
+            <button class="icon-button" id="print-gantt" type="button">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 8V3.5h10V8M7 17v3.5h10V17" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5 8h14a2 2 0 0 1 2 2v6H3v-6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.8"/><path d="M17.5 11.5h.01" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+              พิมพ์ / บันทึก PDF
+            </button>
+          </div>
+        </div>
+
+        <ul class="gantt-legend" aria-label="คำอธิบายสัญลักษณ์">
+          <li><span class="legend-swatch" style="--legend-color:#a85d4e"></span>Evidence &amp; Governance</li>
+          <li><span class="legend-swatch" style="--legend-color:#2f7a60"></span>Nature &amp; Resilience</li>
+          <li><span class="legend-swatch" style="--legend-color:#c9822b"></span>Community Shared Value</li>
+          <li><span class="legend-swatch" style="--legend-color:#2e7180"></span>Learning &amp; Innovation</li>
+          <li><span class="legend-swatch" style="--legend-color:#785b7d"></span>Corporate &amp; Market Value</li>
+          <li><span class="legend-diamond"></span>Milestone / Decision Gate</li>
+        </ul>
+
+        <div class="gantt-shell">
+          <div class="gantt-scroller" id="gantt-scroller" tabindex="0" aria-label="Gantt Chart แบบเลื่อนแนวนอนและแนวตั้ง">
+            <div class="gantt-grid" id="gantt-grid"></div>
+            <noscript>
+              <p class="noscript-message">หน้านี้ต้องใช้ JavaScript เพื่อแสดง Gantt Chart กรุณาเปิด JavaScript ในเบราว์เซอร์</p>
+            </noscript>
+          </div>
+        </div>
+
+        <div class="gantt-footnotes">
+          <article class="gantt-note-card">
+            <h3>Critical sequence</h3>
+            <ul>
+              <li>รวมหลักฐาน 3 ปี → Baseline → ตั้ง Target รายพื้นที่</li>
+              <li>ข้อตกลงชุมชน → Pilot แบบมีค่าตอบแทน → ประเมินผลสุทธิ → Scale</li>
+              <li>Dashboard / Claim Policy → Annual Report → Independent Review</li>
+              <li>Validated model → เชื่อมเข้ากับ ESG, HR, Procurement และ BD</li>
+            </ul>
+          </article>
+          <article class="gantt-note-card">
+            <h3>Planning assumptions</h3>
+            <p>
+              แต่ละไตรมาสเป็นรอบ 3 เดือนนับจากวันที่ 28 สิงหาคมของทุกปี แถบลายหมายถึงงานประจำหรือเกิดซ้ำ
+              สัญลักษณ์รูปเพชรคือรายงาน การประเมิน หรือ Decision Gate วันที่จริงควรปรับให้ตรงรอบงบประมาณ ฤดูกาล และช่วงน้ำขึ้น–ลงของแต่ละพื้นที่
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 32 32" fill="none">
+            <path d="M16 3.5c-2.7 4.4-2.4 8.3.8 11.6 3.5-3.3 3.7-7.4-.8-11.6Z" fill="#8ed0b2"/>
+            <path d="M8.2 8.6c.1 4.7 2.2 7.8 6.6 9.2.9-4.8-1.5-8-6.6-9.2Z" fill="#69b890"/>
+            <path d="M23.8 8.6c-.1 4.7-2.2 7.8-6.6 9.2-.9-4.8 1.5-8 6.6-9.2Z" fill="#a6ddc1"/>
+            <path d="M16 15.5v12.2M16 20.1l-5.3 7.6M16 20.1l5.3 7.6M16 23.1l-2.6 4.6M16 23.1l2.6 4.6" stroke="#dcebe5" stroke-width="1.7" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <span>
+          <strong>Mangrove Co-benefit 2031</strong>
+          <small>Implementation Gantt · Project Years 4–8</small>
+        </span>
+      </div>
+      <p class="footer-note">
+        Working plan dated 28 August 2026. ระยะเวลาต้องทบทวนรายไตรมาสตามฤดูกาล ข้อมูลภาคสนาม งบประมาณ และข้อตกลงกับชุมชน
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
