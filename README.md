@@ -7,9 +7,17 @@
 - Strategy: https://co-benefit-swart.vercel.app/
 - Gantt Chart: https://co-benefit-swart.vercel.app/gantt/
 
+## มุมมองในหน้า Strategy
+
+หน้า `/` แบ่งเป็นแท็บเพื่อรักษาเนื้อหาเดิมและเพิ่มมุมมองสำหรับผู้บริหาร:
+
+- **Executive Summary** — เปิดเป็นค่าเริ่มต้น สรุปข้อเสนออนุมัติ คุณค่าต่อองค์กร Roadmap 5 ปี Portfolio Priority, Executive Scorecard, Risk และแผน 90 วัน
+- **Full Strategy** — เนื้อหาเดิมครบทั้งหมด รวม 5 เสาหลัก 20 โปรแกรม Roadmap, KPI, Governance และ Advanced Co-benefit Modules
+- **Implementation Gantt** — ลิงก์ไปหน้า Gantt 20 ไตรมาสที่แยกเป็นอีกหน้า
+
 ## หน้าเว็บไซต์
 
-- `/` — แผนยุทธศาสตร์ Beyond Carbon: 5 เสาหลัก, 20 โปรแกรม, Roadmap, Business Value, KPI, Governance และ Advanced Co-benefit Modules
+- `/` — Executive Summary และ Full Strategy ในรูปแบบแท็บ
 - `/gantt/` — Gantt Chart 20 ไตรมาส พร้อมตัวกรอง 5 Workstream, Milestone, Decision Gate และงานเสริมจากแผนเชิงลึก
 
 ## ประเด็นที่รวมเพิ่มจากเอกสารเชิงลึก
@@ -39,17 +47,22 @@
 │   ├── styles-gantt.css
 │   ├── styles-responsive.css
 │   ├── combined-extension.css
+│   ├── executive-summary.css
 │   ├── site.js
 │   ├── strategy.js
 │   ├── gantt.js
-│   └── combined-extension.js
+│   ├── combined-extension.js
+│   └── executive-summary.js
 ├── vercel.json
 └── .github/workflows/
     ├── deploy-pages.yml
     └── validate.yml
 ```
 
-`site.js` โหลด `combined-extension.css` และ `combined-extension.js` หลังหน้าเดิม render เสร็จ เพื่อเพิ่มเนื้อหาใหม่โดยไม่ลบหรือแก้โครง Strategy/Gantt เดิม
+`site.js` โหลดส่วนขยายหลังหน้าเดิม render เสร็จ:
+
+- `combined-extension.css/js` เพิ่มเนื้อหาเชิงลึกโดยไม่ลบ Strategy/Gantt เดิม
+- `executive-summary.css/js` เพิ่มแท็บ Executive Summary และปรับ Presentation Layer สำหรับผู้บริหาร โดย Full Strategy เดิมยังคงอยู่ครบ
 
 ## เปิดดูในเครื่อง
 
@@ -63,6 +76,11 @@ python3 -m http.server 8000
 http://localhost:8000/
 http://localhost:8000/gantt/
 ```
+
+## แก้ไข Executive Summary
+
+- เนื้อหาและลำดับการเล่าเรื่อง: `assets/executive-summary.js`
+- รูปแบบ Presentation และ Responsive UI: `assets/executive-summary.css`
 
 ## แก้ไขแผน Gantt
 
@@ -101,11 +119,13 @@ Quarter ใช้เลข 1–20:
 
 ## Validation
 
-Workflow `validate.yml` ตรวจ JavaScript syntax, ลิงก์ภายใน และไฟล์ CSS/asset ทุกครั้งที่ push เข้า `main` หรือเปิด Pull Request
+Workflow `validate.yml` ตรวจ JavaScript syntax ของไฟล์หลักและส่วนขยาย รวมถึงลิงก์ภายในและไฟล์ CSS/asset ทุกครั้งที่ push เข้า `main` หรือเปิด Pull Request
 
 ## Deployment
 
 เว็บไซต์เป็น Static Site และมี `vercel.json` สำหรับนำเข้า Vercel โดยตรง
+
+Production URL อ่านไฟล์ล่าสุดจาก GitHub `main` ดังนั้นการอัปเดตเนื้อหาใน Repository จะปรากฏหลัง Refresh โดยไม่ต้องสร้างโปรเจกต์ใหม่
 
 สำหรับ GitHub Pages ให้เปิดครั้งแรกที่:
 
