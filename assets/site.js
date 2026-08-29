@@ -5,26 +5,83 @@
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
 
-  const addExecutiveSummaryNav = () => {
-    if (!nav || nav.querySelector('[data-exsum-nav]')) return;
+  const normalizedPath = (href) => {
+    try { return new URL(href, window.location.href).pathname.replace(/\/+$/, '') || '/'; }
+    catch (_) { return ''; }
+  };
 
-    const brandHref = document.querySelector('.brand')?.href || new URL('./', window.location.href).href;
-    const rootUrl = new URL(brandHref, window.location.href);
-    const exsumUrl = new URL('exsum/', rootUrl);
+  const rootUrl = () => {
+    const brandHref = document.querySelector('.brand')?.href || new URL('/', window.location.href).href;
+    const brandUrl = new URL(brandHref, window.location.href);
+    const path = brandUrl.pathname.replace(/\/+$/, '');
+    if (path.endsWith('/gantt') || path.endsWith('/exsum') || path.endsWith('/pilot-krabi')) {
+      return new URL('../', brandUrl);
+    }
+    return brandUrl;
+  };
+
+  const addExecutiveSummaryNav = () => {
+    if (!nav) return;
+    const existing = [...nav.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/exsum'));
+    if (existing) {
+      existing.dataset.exsumNav = 'true';
+      if (normalizedPath(window.location.href).endsWith('/exsum')) existing.setAttribute('aria-current', 'page');
+      return;
+    }
+
     const link = document.createElement('a');
     link.dataset.exsumNav = 'true';
-    link.href = exsumUrl.href;
+    link.href = new URL('exsum/', rootUrl()).href;
     link.textContent = 'Executive Summary';
-
-    if (window.location.pathname.replace(/\/+$/, '').endsWith('/exsum')) {
-      link.setAttribute('aria-current', 'page');
-    }
+    if (normalizedPath(window.location.href).endsWith('/exsum')) link.setAttribute('aria-current', 'page');
 
     const ganttLink = nav.querySelector('.nav-cta');
     nav.insertBefore(link, ganttLink || nav.firstChild);
   };
 
+  const addKrabiPilotNav = () => {
+    if (!nav) return;
+    const existing = [...nav.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/pilot-krabi'));
+    if (existing) {
+      existing.dataset.pilotNav = 'true';
+      if (normalizedPath(window.location.href).endsWith('/pilot-krabi')) existing.setAttribute('aria-current', 'page');
+      return;
+    }
+
+    const link = document.createElement('a');
+    link.dataset.pilotNav = 'true';
+    link.href = new URL('pilot-krabi/', rootUrl()).href;
+    link.textContent = 'Krabi Pilot';
+    if (normalizedPath(window.location.href).endsWith('/pilot-krabi')) link.setAttribute('aria-current', 'page');
+
+    const ganttLink = nav.querySelector('.nav-cta');
+    nav.insertBefore(link, ganttLink || nav.firstChild);
+  };
+
+  const addKrabiPilotTabs = () => {
+    document.querySelectorAll('.strategy-tab-list').forEach((list) => {
+      const existing = [...list.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/pilot-krabi'));
+      if (existing) {
+        existing.dataset.pilotTab = 'true';
+        return;
+      }
+
+      const link = document.createElement('a');
+      link.dataset.pilotTab = 'true';
+      link.className = list.querySelector('.exsum-tab') ? 'exsum-tab' : 'strategy-gantt-link';
+      link.href = new URL('pilot-krabi/', rootUrl()).href;
+      link.textContent = 'Krabi Pilot';
+      link.setAttribute('role', 'tab');
+      link.setAttribute('aria-selected', 'false');
+
+      const ganttLink = list.querySelector('.strategy-gantt-link');
+      list.insertBefore(link, ganttLink || null);
+    });
+  };
+
   addExecutiveSummaryNav();
+  addKrabiPilotNav();
+  addKrabiPilotTabs();
 
   if (toggle && nav) {
     const closeMenu = () => {
@@ -55,9 +112,6 @@
     });
   }
 
-  // The five-year window is counted from 29 August 2026, the date the plan was requested.
-  // Keeping the replacement map here ensures that static and JavaScript-rendered sections
-  // show one consistent project calendar on both pages.
   const applyPlanCalendar = () => {
     const replacements = [
       ['28 ส.ค. 2569 – 27 ส.ค. 2574', '29 ส.ค. 2569 – 28 ส.ค. 2574'],
@@ -76,23 +130,17 @@
 
     const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
     const textNodes = [];
-
     while (walker.nextNode()) textNodes.push(walker.currentNode);
 
     textNodes.forEach((node) => {
       const original = node.nodeValue || '';
-      const revised = replacements.reduce(
-        (text, [from, to]) => text.replaceAll(from, to),
-        original
-      );
-
+      const revised = replacements.reduce((text, [from, to]) => text.replaceAll(from, to), original);
       if (revised !== original) node.nodeValue = revised;
     });
   };
 
   const addLinkedAsset = (name, type, id) => {
     if (!assetBase || document.getElementById(id)) return;
-
     if (type === 'style') {
       const link = document.createElement('link');
       link.id = id;
@@ -101,7 +149,6 @@
       document.head.appendChild(link);
       return;
     }
-
     const script = document.createElement('script');
     script.id = id;
     script.src = new URL(name, assetBase).href;
@@ -117,7 +164,6 @@
 
   const injectFetchedAsset = (content, type, id, sourceName) => {
     if (document.getElementById(id)) return;
-
     if (type === 'style') {
       const style = document.createElement('style');
       style.id = id;
@@ -125,7 +171,6 @@
       document.head.appendChild(style);
       return;
     }
-
     const script = document.createElement('script');
     script.id = id;
     script.textContent = `${content}\n//# sourceURL=${sourceName}`;
@@ -167,9 +212,15 @@
   const initialize = () => {
     applyPlanCalendar();
     addExecutiveSummaryNav();
+    addKrabiPilotNav();
+    addKrabiPilotTabs();
     loadCombinedExtension();
     loadExecutiveLayer();
   };
+
+  const tabObserver = new MutationObserver(() => addKrabiPilotTabs());
+  tabObserver.observe(document.documentElement, { childList: true, subtree: true });
+  window.setTimeout(() => tabObserver.disconnect(), 8000);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initialize, { once: true });
