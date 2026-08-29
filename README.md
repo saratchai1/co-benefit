@@ -1,6 +1,6 @@
 # Mangrove Co-benefit 2031
 
-เว็บไซต์นำเสนอแผน Co-benefit 5 ปี สำหรับโครงการปลูกป่าชายเลนที่ดำเนินการมาแล้ว 3 ปี โดยวางแผนต่อเนื่องใน **ปีโครงการที่ 4–8** ระหว่างวันที่ **28 สิงหาคม 2569 – 27 สิงหาคม 2574**
+เว็บไซต์นำเสนอแผน Co-benefit 5 ปี สำหรับโครงการปลูกป่าชายเลนที่ดำเนินการมาแล้ว 3 ปี โดยวางแผนต่อเนื่องใน **ปีโครงการที่ 4–8** ระหว่างวันที่ **29 สิงหาคม 2569 – 28 สิงหาคม 2574**
 
 ## หน้าเว็บไซต์
 
@@ -16,8 +16,14 @@
 │   └── index.html
 ├── assets/
 │   ├── styles.css
+│   ├── styles-foundation.css
+│   ├── styles-strategy.css
+│   ├── styles-gantt.css
+│   ├── styles-responsive.css
 │   ├── site.js
+│   ├── strategy.js
 │   └── gantt.js
+├── vercel.json
 └── .github/workflows/
     └── deploy-pages.yml
 ```
@@ -28,7 +34,12 @@
 python3 -m http.server 8000
 ```
 
-จากนั้นเปิด `http://localhost:8000/` และ `http://localhost:8000/gantt/`
+จากนั้นเปิด:
+
+```text
+http://localhost:8000/
+http://localhost:8000/gantt/
+```
 
 ## แก้ไขแผน Gantt
 
@@ -65,15 +76,24 @@ Quarter ใช้เลข 1–20:
 
 ## Deployment
 
-Workflow `deploy-pages.yml` เตรียมไว้สำหรับ GitHub Pages และจะทำงานเมื่อ push เข้า `main` หรือสั่ง `workflow_dispatch`
+เว็บไซต์เป็น Static Site และมี `vercel.json` สำหรับนำเข้า Vercel โดยตรง
+
+สำหรับ GitHub Pages ให้เปิดครั้งแรกที่:
+
+```text
+Repository Settings > Pages > Source: GitHub Actions
+```
+
+จากนั้นเปิดแท็บ Actions และสั่ง workflow `Deploy static site to GitHub Pages` ด้วย `Run workflow`
 
 URL เป้าหมายเมื่อ Pages เปิดใช้งาน:
 
 ```text
 https://saratchai1.github.io/co-benefit/
+https://saratchai1.github.io/co-benefit/gantt/
 ```
 
-เว็บไซต์เป็น static site ไม่มี backend, database หรือ secret key
+Workflow ถูกตั้งเป็น Manual เพื่อไม่ให้ขึ้นสถานะล้มเหลวในกรณีที่ GitHub Pages ยังไม่ได้เปิดใช้งาน เว็บไซต์ไม่มี backend, database หรือ secret key
 
 ## หลักการของแผน
 
@@ -82,5 +102,6 @@ https://saratchai1.github.io/co-benefit/
 - แยก Output, Outcome, Impact และ Business Value
 - ทุก Claim ต้องมีพื้นที่ วันที่ วิธีวัด เจ้าของข้อมูล และหลักฐานต้นทาง
 - มี Independent Review ในปีที่ 5, 7 และปลายปีที่ 8
+- ทุกปีมี Decision Gate สำหรับ Stop, Adapt หรือ Scale
 
 กรอบอ้างอิงในเว็บไซต์ใช้เพื่อช่วยออกแบบระบบ ไม่ใช่คำรับรองว่าโครงการผ่านมาตรฐาน TNFD, GRI, IUCN หรือ IFC แล้ว
