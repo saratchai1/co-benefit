@@ -1,8 +1,6 @@
 name: Deploy static site to GitHub Pages
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -15,7 +13,26 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  check-pages:
+    runs-on: ubuntu-latest
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - name: Check whether GitHub Pages is enabled
+        id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "GitHub Pages is not enabled yet. Open Settings > Pages and select GitHub Actions, then run this workflow again."
+          fi
+
   deploy:
+    needs: check-pages
+    if: needs.check-pages.outputs.enabled == 'true'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -26,8 +43,6 @@ jobs:
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload static site
         uses: actions/upload-pages-artifact@v3
