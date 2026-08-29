@@ -2,6 +2,11 @@
 
 เว็บไซต์นำเสนอแผน Co-benefit 5 ปี สำหรับโครงการปลูกป่าชายเลนที่ดำเนินการมาแล้ว 3 ปี โดยวางแผนต่อเนื่องใน **ปีโครงการที่ 4–8** ระหว่างวันที่ **29 สิงหาคม 2569 – 28 สิงหาคม 2574**
 
+## เว็บไซต์ที่เผยแพร่แล้ว
+
+- Strategy: https://co-benefit-swart.vercel.app/
+- Gantt Chart: https://co-benefit-swart.vercel.app/gantt/
+
 ## หน้าเว็บไซต์
 
 - `/` — แผนยุทธศาสตร์ Beyond Carbon: 5 เสาหลัก, 12 โปรแกรม, Roadmap, Business Value, KPI และ Governance
@@ -25,7 +30,8 @@
 │   └── gantt.js
 ├── vercel.json
 └── .github/workflows/
-    └── deploy-pages.yml
+    ├── deploy-pages.yml
+    └── validate.yml
 ```
 
 ## เปิดดูในเครื่อง
@@ -73,6 +79,10 @@ Quarter ใช้เลข 1–20:
   label: 'Independent review'
 }
 ```
+
+## Validation
+
+Workflow `validate.yml` ตรวจ JavaScript syntax, ลิงก์ภายใน และไฟล์ CSS/asset ทุกครั้งที่ push เข้า `main` หรือเปิด Pull Request
 
 ## Deployment
 
