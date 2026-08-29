@@ -74,7 +74,11 @@ jobs:
                   if not path_part:
                       continue
 
-                  target = (html_file.parent / path_part).resolve()
+                  if path_part.startswith("/"):
+                      target = (root / path_part.lstrip("/")).resolve()
+                  else:
+                      target = (html_file.parent / path_part).resolve()
+
                   try:
                       target.relative_to(root)
                   except ValueError:
