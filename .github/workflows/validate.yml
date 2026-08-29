@@ -25,6 +25,7 @@ jobs:
           node --check assets/combined-extension.js
           node --check assets/executive-summary.js
           node --check assets/exsum-page.js
+          node --check assets/pilot-krabi.js
 
       - name: Check local HTML links and assets
         run: |
@@ -38,6 +39,7 @@ jobs:
               root / "index.html",
               root / "gantt" / "index.html",
               root / "exsum" / "index.html",
+              root / "pilot-krabi" / "index.html",
           ]
           errors = []
 
@@ -111,6 +113,8 @@ jobs:
               root / "assets" / "executive-summary.js",
               root / "assets" / "exsum-page.css",
               root / "assets" / "exsum-page.js",
+              root / "assets" / "pilot-krabi.css",
+              root / "assets" / "pilot-krabi.js",
           ]
           for asset in dynamic_assets:
               if not asset.exists():
