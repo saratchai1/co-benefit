@@ -1,4 +1,6 @@
 (() => {
+  const currentScript = document.currentScript;
+  const assetBase = currentScript?.src ? new URL('.', currentScript.src) : null;
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
 
@@ -66,9 +68,34 @@
     });
   };
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', applyPlanCalendar, { once: true });
-  } else {
+  const loadCombinedExtension = () => {
+    if (!assetBase) return;
+
+    if (!document.getElementById('combined-extension-styles')) {
+      const styleLink = document.createElement('link');
+      styleLink.id = 'combined-extension-styles';
+      styleLink.rel = 'stylesheet';
+      styleLink.href = new URL('combined-extension.css', assetBase).href;
+      document.head.appendChild(styleLink);
+    }
+
+    if (!document.getElementById('combined-extension-script')) {
+      const extensionScript = document.createElement('script');
+      extensionScript.id = 'combined-extension-script';
+      extensionScript.src = new URL('combined-extension.js', assetBase).href;
+      extensionScript.async = true;
+      document.body.appendChild(extensionScript);
+    }
+  };
+
+  const initialize = () => {
     applyPlanCalendar();
+    loadCombinedExtension();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize, { once: true });
+  } else {
+    initialize();
   }
 })();
