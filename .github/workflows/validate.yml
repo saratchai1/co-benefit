@@ -1,0 +1,97 @@
+name: Validate static website
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check assets/site.js
+          node --check assets/strategy.js
+          node --check assets/gantt.js
+
+      - name: Check local HTML links and assets
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          root = Path.cwd().resolve()
+          html_files = [root / "index.html", root / "gantt" / "index.html"]
+          errors = []
+
+          class LinkParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.links = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  for key in ("href", "src"):
+                      value = attrs.get(key)
+                      if value:
+                          self.links.append((tag, key, value))
+
+          for html_file in html_files:
+              parser = LinkParser()
+              parser.feed(html_file.read_text(encoding="utf-8"))
+
+              for tag, attr, raw_value in parser.links:
+                  value = raw_value.strip()
+                  if not value or value.startswith(("#", "mailto:", "tel:", "data:")):
+                      continue
+
+                  parsed = urlsplit(value)
+                  if parsed.scheme or parsed.netloc:
+                      continue
+
+                  path_part = parsed.path
+                  if not path_part:
+                      continue
+
+                  target = (html_file.parent / path_part).resolve()
+                  try:
+                      target.relative_to(root)
+                  except ValueError:
+                      errors.append(f"{html_file}: {tag}[{attr}] escapes repository: {value}")
+                      continue
+
+                  if path_part.endswith("/") or target.is_dir():
+                      target = target / "index.html"
+
+                  if not target.exists():
+                      errors.append(f"{html_file}: missing {tag}[{attr}] target: {value}")
+
+          css_entry = root / "assets" / "styles.css"
+          for line in css_entry.read_text(encoding="utf-8").splitlines():
+              line = line.strip()
+              if not line.startswith("@import"):
+                  continue
+              quoted = line.split('"')
+              if len(quoted) < 3:
+                  errors.append(f"Malformed CSS import: {line}")
+                  continue
+              imported = (css_entry.parent / quoted[1]).resolve()
+              if not imported.exists():
+                  errors.append(f"Missing CSS import: {quoted[1]}")
+
+          if errors:
+              print("\n".join(errors))
+              raise SystemExit(1)
+
+          print("Static link and asset checks passed.")
+          PY
