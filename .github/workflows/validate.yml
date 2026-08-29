@@ -22,6 +22,8 @@ jobs:
           node --check assets/site.js
           node --check assets/strategy.js
           node --check assets/gantt.js
+          node --check assets/combined-extension.js
+          node --check assets/executive-summary.js
 
       - name: Check local HTML links and assets
         run: |
@@ -88,6 +90,16 @@ jobs:
               imported = (css_entry.parent / quoted[1]).resolve()
               if not imported.exists():
                   errors.append(f"Missing CSS import: {quoted[1]}")
+
+          dynamic_assets = [
+              root / "assets" / "combined-extension.css",
+              root / "assets" / "combined-extension.js",
+              root / "assets" / "executive-summary.css",
+              root / "assets" / "executive-summary.js",
+          ]
+          for asset in dynamic_assets:
+              if not asset.exists():
+                  errors.append(f"Missing dynamic asset: {asset.relative_to(root)}")
 
           if errors:
               print("\n".join(errors))
