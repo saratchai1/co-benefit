@@ -5,9 +5,14 @@
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
 
+  const parsedUrl = (href) => {
+    try { return new URL(href, window.location.href); }
+    catch (_) { return null; }
+  };
+
   const normalizedPath = (href) => {
-    try { return new URL(href, window.location.href).pathname.replace(/\/+$/, '') || '/'; }
-    catch (_) { return ''; }
+    const url = parsedUrl(href);
+    return url ? (url.pathname.replace(/\/+$/, '') || '/') : '';
   };
 
   const rootUrl = () => {
@@ -20,12 +25,20 @@
     return brandUrl;
   };
 
+  const pilotViewUrl = () => new URL('exsum/?view=krabi-pilot', rootUrl());
+
+  const isPilotView = (href) => {
+    const url = parsedUrl(href);
+    if (!url) return false;
+    return url.pathname.replace(/\/+$/, '').endsWith('/exsum') && url.searchParams.get('view') === 'krabi-pilot';
+  };
+
   const addExecutiveSummaryNav = () => {
     if (!nav) return;
-    const existing = [...nav.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/exsum'));
+    const existing = [...nav.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/exsum') && !isPilotView(link.href));
     if (existing) {
       existing.dataset.exsumNav = 'true';
-      if (normalizedPath(window.location.href).endsWith('/exsum')) existing.setAttribute('aria-current', 'page');
+      if (normalizedPath(window.location.href).endsWith('/exsum') && !isPilotView(window.location.href)) existing.setAttribute('aria-current', 'page');
       return;
     }
 
@@ -33,7 +46,7 @@
     link.dataset.exsumNav = 'true';
     link.href = new URL('exsum/', rootUrl()).href;
     link.textContent = 'Executive Summary';
-    if (normalizedPath(window.location.href).endsWith('/exsum')) link.setAttribute('aria-current', 'page');
+    if (normalizedPath(window.location.href).endsWith('/exsum') && !isPilotView(window.location.href)) link.setAttribute('aria-current', 'page');
 
     const ganttLink = nav.querySelector('.nav-cta');
     nav.insertBefore(link, ganttLink || nav.firstChild);
@@ -41,18 +54,20 @@
 
   const addKrabiPilotNav = () => {
     if (!nav) return;
-    const existing = [...nav.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/pilot-krabi'));
+    const existing = [...nav.querySelectorAll('a')].find((link) => link.dataset.pilotNav || link.textContent.trim() === 'Krabi Pilot' || normalizedPath(link.href).endsWith('/pilot-krabi') || isPilotView(link.href));
     if (existing) {
       existing.dataset.pilotNav = 'true';
-      if (normalizedPath(window.location.href).endsWith('/pilot-krabi')) existing.setAttribute('aria-current', 'page');
+      existing.href = pilotViewUrl().href;
+      if (isPilotView(window.location.href)) existing.setAttribute('aria-current', 'page');
+      else if (existing.getAttribute('aria-current') === 'page') existing.removeAttribute('aria-current');
       return;
     }
 
     const link = document.createElement('a');
     link.dataset.pilotNav = 'true';
-    link.href = new URL('pilot-krabi/', rootUrl()).href;
+    link.href = pilotViewUrl().href;
     link.textContent = 'Krabi Pilot';
-    if (normalizedPath(window.location.href).endsWith('/pilot-krabi')) link.setAttribute('aria-current', 'page');
+    if (isPilotView(window.location.href)) link.setAttribute('aria-current', 'page');
 
     const ganttLink = nav.querySelector('.nav-cta');
     nav.insertBefore(link, ganttLink || nav.firstChild);
@@ -60,19 +75,25 @@
 
   const addKrabiPilotTabs = () => {
     document.querySelectorAll('.strategy-tab-list').forEach((list) => {
-      const existing = [...list.querySelectorAll('a')].find((link) => normalizedPath(link.href).endsWith('/pilot-krabi'));
+      const existing = [...list.querySelectorAll('a')].find((link) => link.dataset.pilotTab || link.textContent.replace('↗', '').trim() === 'Krabi Pilot' || normalizedPath(link.href).endsWith('/pilot-krabi') || isPilotView(link.href));
       if (existing) {
         existing.dataset.pilotTab = 'true';
+        existing.href = pilotViewUrl().href;
+        if (isPilotView(window.location.href)) {
+          existing.classList.add('is-active');
+          existing.setAttribute('aria-selected', 'true');
+        }
         return;
       }
 
       const link = document.createElement('a');
       link.dataset.pilotTab = 'true';
       link.className = list.querySelector('.exsum-tab') ? 'exsum-tab' : 'strategy-gantt-link';
-      link.href = new URL('pilot-krabi/', rootUrl()).href;
+      link.href = pilotViewUrl().href;
       link.textContent = 'Krabi Pilot';
       link.setAttribute('role', 'tab');
-      link.setAttribute('aria-selected', 'false');
+      link.setAttribute('aria-selected', String(isPilotView(window.location.href)));
+      if (isPilotView(window.location.href)) link.classList.add('is-active');
 
       const ganttLink = list.querySelector('.strategy-gantt-link');
       list.insertBefore(link, ganttLink || null);
