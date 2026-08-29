@@ -5,6 +5,27 @@
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
 
+  const addExecutiveSummaryNav = () => {
+    if (!nav || nav.querySelector('[data-exsum-nav]')) return;
+
+    const brandHref = document.querySelector('.brand')?.href || new URL('./', window.location.href).href;
+    const rootUrl = new URL(brandHref, window.location.href);
+    const exsumUrl = new URL('exsum/', rootUrl);
+    const link = document.createElement('a');
+    link.dataset.exsumNav = 'true';
+    link.href = exsumUrl.href;
+    link.textContent = 'Executive Summary';
+
+    if (window.location.pathname.replace(/\/+$/, '').endsWith('/exsum')) {
+      link.setAttribute('aria-current', 'page');
+    }
+
+    const ganttLink = nav.querySelector('.nav-cta');
+    nav.insertBefore(link, ganttLink || nav.firstChild);
+  };
+
+  addExecutiveSummaryNav();
+
   if (toggle && nav) {
     const closeMenu = () => {
       toggle.setAttribute('aria-expanded', 'false');
@@ -145,6 +166,7 @@
 
   const initialize = () => {
     applyPlanCalendar();
+    addExecutiveSummaryNav();
     loadCombinedExtension();
     loadExecutiveLayer();
   };
