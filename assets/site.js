@@ -1,6 +1,7 @@
 (() => {
   const currentScript = document.currentScript;
   const assetBase = currentScript?.src ? new URL('.', currentScript.src) : null;
+  const rawAssetBase = 'https://raw.githubusercontent.com/saratchai1/co-benefit/main/assets/';
   const toggle = document.querySelector('.menu-toggle');
   const nav = document.querySelector('.site-nav');
 
@@ -68,29 +69,84 @@
     });
   };
 
+  const addLinkedAsset = (name, type, id) => {
+    if (!assetBase || document.getElementById(id)) return;
+
+    if (type === 'style') {
+      const link = document.createElement('link');
+      link.id = id;
+      link.rel = 'stylesheet';
+      link.href = new URL(name, assetBase).href;
+      document.head.appendChild(link);
+      return;
+    }
+
+    const script = document.createElement('script');
+    script.id = id;
+    script.src = new URL(name, assetBase).href;
+    script.async = false;
+    document.body.appendChild(script);
+  };
+
   const loadCombinedExtension = () => {
     if (!assetBase) return;
+    addLinkedAsset('combined-extension.css', 'style', 'combined-extension-styles');
+    addLinkedAsset('combined-extension.js', 'script', 'combined-extension-script');
+  };
 
-    if (!document.getElementById('combined-extension-styles')) {
-      const styleLink = document.createElement('link');
-      styleLink.id = 'combined-extension-styles';
-      styleLink.rel = 'stylesheet';
-      styleLink.href = new URL('combined-extension.css', assetBase).href;
-      document.head.appendChild(styleLink);
+  const injectFetchedAsset = (content, type, id, sourceName) => {
+    if (document.getElementById(id)) return;
+
+    if (type === 'style') {
+      const style = document.createElement('style');
+      style.id = id;
+      style.textContent = content;
+      document.head.appendChild(style);
+      return;
     }
 
-    if (!document.getElementById('combined-extension-script')) {
-      const extensionScript = document.createElement('script');
-      extensionScript.id = 'combined-extension-script';
-      extensionScript.src = new URL('combined-extension.js', assetBase).href;
-      extensionScript.async = true;
-      document.body.appendChild(extensionScript);
+    const script = document.createElement('script');
+    script.id = id;
+    script.textContent = `${content}\n//# sourceURL=${sourceName}`;
+    document.body.appendChild(script);
+  };
+
+  const loadExecutiveLayer = () => {
+    const relevantPage = document.getElementById('portfolio') || document.getElementById('gantt-grid');
+    if (!relevantPage || window.__coBenefitExecutiveLoading) return;
+    window.__coBenefitExecutiveLoading = true;
+
+    if (assetBase) {
+      addLinkedAsset('executive-summary.css', 'style', 'executive-summary-styles');
+      addLinkedAsset('executive-summary.js', 'script', 'executive-summary-script');
+      return;
     }
+
+    const stamp = Date.now();
+    Promise.all([
+      fetch(`${rawAssetBase}executive-summary.css?v=${stamp}`, { cache: 'no-store' }).then((response) => {
+        if (!response.ok) throw new Error(`Executive CSS returned ${response.status}`);
+        return response.text();
+      }),
+      fetch(`${rawAssetBase}executive-summary.js?v=${stamp}`, { cache: 'no-store' }).then((response) => {
+        if (!response.ok) throw new Error(`Executive JS returned ${response.status}`);
+        return response.text();
+      })
+    ])
+      .then(([css, js]) => {
+        injectFetchedAsset(css, 'style', 'executive-summary-styles', 'github/assets/executive-summary.css');
+        injectFetchedAsset(js, 'script', 'executive-summary-script', 'github/assets/executive-summary.js');
+      })
+      .catch((error) => {
+        window.__coBenefitExecutiveLoading = false;
+        console.error('Unable to load executive presentation layer', error);
+      });
   };
 
   const initialize = () => {
     applyPlanCalendar();
     loadCombinedExtension();
+    loadExecutiveLayer();
   };
 
   if (document.readyState === 'loading') {
