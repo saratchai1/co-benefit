@@ -24,6 +24,7 @@ jobs:
           node --check assets/gantt.js
           node --check assets/combined-extension.js
           node --check assets/executive-summary.js
+          node --check assets/exsum-page.js
 
       - name: Check local HTML links and assets
         run: |
@@ -33,7 +34,11 @@ jobs:
           from urllib.parse import urlsplit
 
           root = Path.cwd().resolve()
-          html_files = [root / "index.html", root / "gantt" / "index.html"]
+          html_files = [
+              root / "index.html",
+              root / "gantt" / "index.html",
+              root / "exsum" / "index.html",
+          ]
           errors = []
 
           class LinkParser(HTMLParser):
@@ -49,6 +54,10 @@ jobs:
                           self.links.append((tag, key, value))
 
           for html_file in html_files:
+              if not html_file.exists():
+                  errors.append(f"Missing HTML page: {html_file.relative_to(root)}")
+                  continue
+
               parser = LinkParser()
               parser.feed(html_file.read_text(encoding="utf-8"))
 
@@ -96,6 +105,8 @@ jobs:
               root / "assets" / "combined-extension.js",
               root / "assets" / "executive-summary.css",
               root / "assets" / "executive-summary.js",
+              root / "assets" / "exsum-page.css",
+              root / "assets" / "exsum-page.js",
           ]
           for asset in dynamic_assets:
               if not asset.exists():
