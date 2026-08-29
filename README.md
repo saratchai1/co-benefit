@@ -9,8 +9,21 @@
 
 ## หน้าเว็บไซต์
 
-- `/` — แผนยุทธศาสตร์ Beyond Carbon: 5 เสาหลัก, 12 โปรแกรม, Roadmap, Business Value, KPI และ Governance
-- `/gantt/` — Gantt Chart 20 ไตรมาส พร้อมตัวกรอง 5 Workstream, Milestone และ Decision Gate
+- `/` — แผนยุทธศาสตร์ Beyond Carbon: 5 เสาหลัก, 20 โปรแกรม, Roadmap, Business Value, KPI, Governance และ Advanced Co-benefit Modules
+- `/gantt/` — Gantt Chart 20 ไตรมาส พร้อมตัวกรอง 5 Workstream, Milestone, Decision Gate และงานเสริมจากแผนเชิงลึก
+
+## ประเด็นที่รวมเพิ่มจากเอกสารเชิงลึก
+
+- CBEMR และ Ecological Hydrology
+- eDNA Biodiversity Evidence
+- SROI Impact Valuation
+- TNFD LEAP Integration
+- Eco-Social Enterprise และ Coastal Food Security
+- Learning Center และ Community-Based Tourism
+- Co-management, Land/Right Due Diligence และ Institutional Partnership
+- Public Health / Pollution Evidence ในฐานะ Research Candidate ที่ต้องพิสูจน์ Attribution ก่อน
+
+โมดูลเหล่านี้ถูกเพิ่มเป็นงานแบบมีเงื่อนไข ไม่ใช่การกล่าวอ้างว่าโครงการบรรลุผลแล้ว ต้องผ่าน Baseline, Feasibility, สิทธิพื้นที่, Carrying Capacity และ Decision Gate ที่เกี่ยวข้องก่อนดำเนินการหรือสื่อสารภายนอก
 
 ## โครงสร้างไฟล์
 
@@ -25,14 +38,18 @@
 │   ├── styles-strategy.css
 │   ├── styles-gantt.css
 │   ├── styles-responsive.css
+│   ├── combined-extension.css
 │   ├── site.js
 │   ├── strategy.js
-│   └── gantt.js
+│   ├── gantt.js
+│   └── combined-extension.js
 ├── vercel.json
 └── .github/workflows/
     ├── deploy-pages.yml
     └── validate.yml
 ```
+
+`site.js` โหลด `combined-extension.css` และ `combined-extension.js` หลังหน้าเดิม render เสร็จ เพื่อเพิ่มเนื้อหาใหม่โดยไม่ลบหรือแก้โครง Strategy/Gantt เดิม
 
 ## เปิดดูในเครื่อง
 
@@ -49,7 +66,9 @@ http://localhost:8000/gantt/
 
 ## แก้ไขแผน Gantt
 
-ข้อมูล Work package, Owner, Quarter และ Milestone อยู่ใน `assets/gantt.js`
+ข้อมูล Work package เดิม, Owner, Quarter และ Milestone อยู่ใน `assets/gantt.js`
+
+งานที่รวมเพิ่มจากเอกสารเชิงลึกอยู่ใน `extendedTasks` ภายใน `assets/combined-extension.js`
 
 Quarter ใช้เลข 1–20:
 
@@ -113,5 +132,6 @@ Workflow ถูกตั้งเป็น Manual เพื่อไม่ให
 - ทุก Claim ต้องมีพื้นที่ วันที่ วิธีวัด เจ้าของข้อมูล และหลักฐานต้นทาง
 - มี Independent Review ในปีที่ 5, 7 และปลายปีที่ 8
 - ทุกปีมี Decision Gate สำหรับ Stop, Adapt หรือ Scale
+- eDNA, SROI, Biodiversity Net Gain, การลดมลพิษ และผลด้านสุขภาพต้องเปิดเผยข้อจำกัดของวิธีและ Attribution
 
 กรอบอ้างอิงในเว็บไซต์ใช้เพื่อช่วยออกแบบระบบ ไม่ใช่คำรับรองว่าโครงการผ่านมาตรฐาน TNFD, GRI, IUCN หรือ IFC แล้ว
