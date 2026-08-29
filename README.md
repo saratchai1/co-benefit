@@ -5,14 +5,16 @@
 ## เว็บไซต์ที่เผยแพร่แล้ว
 
 - Executive Summary: https://co-benefit-swart.vercel.app/exsum/
-- Krabi Pilot Case: https://co-benefit-swart.vercel.app/pilot-krabi/
+- Krabi Pilot Case: https://co-benefit-swart.vercel.app/exsum/?view=krabi-pilot
 - Full Strategy: https://co-benefit-swart.vercel.app/
 - Gantt Chart: https://co-benefit-swart.vercel.app/gantt/
+
+Production ใช้ Krabi Pilot เป็นแท็บภายใน route `/exsum/` เพื่อให้ทำงานกับ Vercel loader เดิมโดยไม่สร้าง nested route ที่อาจเกิด 404 ส่วนไฟล์ต้นฉบับของหน้า Pilot ยังคงแยกที่ `pilot-krabi/index.html`
 
 ## หน้าเว็บไซต์
 
 - `/exsum/` — Executive Summary สำหรับผู้บริหาร
-- `/pilot-krabi/` — Krabi Dual-Site Pilot: บ้านโคกยูงและบ้านท่าประดู่
+- `/exsum/?view=krabi-pilot` — Krabi Dual-Site Pilot: บ้านโคกยูงและบ้านท่าประดู่
 - `/` — Full Strategy: 5 เสาหลัก, 20 โปรแกรม, Roadmap, KPI, Governance และ Advanced Co-benefit Modules
 - `/gantt/` — Gantt Chart 20 ไตรมาส พร้อมตัวกรอง 5 Workstream, Milestone และ Decision Gate
 
@@ -114,7 +116,7 @@ http://localhost:8000/gantt/
 Workflow `validate.yml` ตรวจ:
 
 - JavaScript syntax ของไฟล์หลักและส่วนขยาย
-- การมีอยู่ของ 4 routes
+- การมีอยู่ของ 4 source pages
 - ลิงก์ภายในแบบ relative และ root-relative
 - CSS และ dynamic assets
 
