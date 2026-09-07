@@ -1,0 +1,88 @@
+name: Validate Impact Studio
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "impact-studio/**"
+      - ".github/workflows/validate-impact-studio.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "impact-studio/**"
+      - ".github/workflows/validate-impact-studio.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-impact-studio:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check JavaScript syntax
+        run: node --check impact-studio/app.js
+
+      - name: Check standalone page and local assets
+        run: |
+          python3 - <<'PY'
+          from html.parser import HTMLParser
+          from pathlib import Path
+          from urllib.parse import urlsplit
+
+          root = Path.cwd().resolve()
+          page = root / "impact-studio" / "index.html"
+          errors = []
+
+          class LinkParser(HTMLParser):
+              def __init__(self):
+                  super().__init__()
+                  self.links = []
+
+              def handle_starttag(self, tag, attrs):
+                  attrs = dict(attrs)
+                  for key in ("href", "src"):
+                      value = attrs.get(key)
+                      if value:
+                          self.links.append((tag, key, value))
+
+          if not page.exists():
+              errors.append("Missing impact-studio/index.html")
+          else:
+              parser = LinkParser()
+              parser.feed(page.read_text(encoding="utf-8"))
+              for tag, attr, raw_value in parser.links:
+                  value = raw_value.strip()
+                  if not value or value.startswith(("#", "mailto:", "tel:", "data:")):
+                      continue
+                  parsed = urlsplit(value)
+                  if parsed.scheme or parsed.netloc:
+                      continue
+                  target = (page.parent / parsed.path).resolve()
+                  if parsed.path.endswith("/") or target.is_dir():
+                      target = target / "index.html"
+                  if not target.exists():
+                      errors.append(f"Missing {tag}[{attr}] target: {value}")
+
+          required = [
+              root / "impact-studio" / "styles.css",
+              root / "impact-studio" / "app.js",
+              root / "impact-studio" / "README.md",
+          ]
+          for item in required:
+              if not item.exists():
+                  errors.append(f"Missing file: {item.relative_to(root)}")
+
+          html = page.read_text(encoding="utf-8") if page.exists() else ""
+          for marker in ("media-input", "donut-chart", "evidence-form", "library-grid"):
+              if f'id="{marker}"' not in html:
+                  errors.append(f"Missing required UI marker: {marker}")
+
+          if errors:
+              print("\n".join(errors))
+              raise SystemExit(1)
+          print("Impact Studio checks passed.")
+          PY
