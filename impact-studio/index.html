@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="เว็บแอปบันทึกหลักฐานรูปภาพ วิดีโอ และผลลัพธ์ Co-benefit ของโครงการป่าชายเลน แยกตาม SDG ชุมชน พื้นที่ และปีโครงการ">
+  <meta name="theme-color" content="#123b32">
+  <title>Co-benefit Impact Studio</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">ข้ามไปยังเนื้อหา</a>
+
+  <header class="topbar">
+    <div class="brand-block">
+      <a class="brand" href="../" aria-label="กลับหน้าหลัก Co-benefit">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 42 42" role="img">
+            <path d="M21 4c-5.6 6.4-5.5 12.5.4 17 6.4-4.4 6.2-11 .4-17Z" fill="currentColor" opacity=".9"/>
+            <path d="M9 11.4c.2 7.8 3.9 12.8 11.2 15.2 1.5-7.8-2.6-13.1-11.2-15.2Zm24 0c-.2 7.8-3.9 12.8-11.2 15.2-1.5-7.8 2.6-13.1 11.2-15.2Z" fill="currentColor" opacity=".55"/>
+            <path d="M21 21v16M21 27l-7 10M21 27l7 10M21 31l-3.5 6M21 31l3.5 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" fill="none"/>
+          </svg>
+        </span>
+        <span><strong>CO-BENEFIT</strong><small>Impact Studio</small></span>
+      </a>
+      <div>
+        <h1>ระบบบันทึกและสรุปหลักฐานประโยชน์ร่วม</h1>
+        <p>รูปภาพ · วิดีโอ · รายละเอียดกิจกรรม · สัดส่วนผลลัพธ์ตาม SDG</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="storage-chip" id="storage-chip" title="ข้อมูลของเวอร์ชันนี้เก็บในเบราว์เซอร์เครื่องที่ใช้งาน">
+        <span class="status-dot"></span> เก็บข้อมูลในเครื่องนี้
+      </span>
+      <button class="button button-ghost" id="export-button" type="button">ส่งออกข้อมูล</button>
+      <button class="button button-primary" data-open-tab="entry" type="button">+ เพิ่มหลักฐาน</button>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="เมนู Impact Studio">
+      <nav class="nav-tabs" role="tablist" aria-orientation="vertical">
+        <button class="nav-tab is-active" id="tab-dashboard" role="tab" aria-selected="true" aria-controls="panel-dashboard" data-tab="dashboard" type="button">
+          <span class="nav-icon" aria-hidden="true">◫</span>
+          <span><strong>ภาพรวม</strong><small>กราฟและตัวชี้วัด</small></span>
+        </button>
+        <button class="nav-tab" id="tab-entry" role="tab" aria-selected="false" aria-controls="panel-entry" data-tab="entry" type="button">
+          <span class="nav-icon" aria-hidden="true">＋</span>
+          <span><strong>บันทึกหลักฐาน</strong><small>อัปโหลดรูปและวิดีโอ</small></span>
+        </button>
+        <button class="nav-tab" id="tab-library" role="tab" aria-selected="false" aria-controls="panel-library" data-tab="library" type="button">
+          <span class="nav-icon" aria-hidden="true">▦</span>
+          <span><strong>คลังสื่อ</strong><small>ค้นหาและเปิดดูไฟล์</small></span>
+        </button>
+        <button class="nav-tab" id="tab-settings" role="tab" aria-selected="false" aria-controls="panel-settings" data-tab="settings" type="button">
+          <span class="nav-icon" aria-hidden="true">⚙</span>
+          <span><strong>จัดการข้อมูล</strong><small>นำเข้า สำรอง และล้างข้อมูล</small></span>
+        </button>
+      </nav>
+
+      <div class="sidebar-note">
+        <strong>ขอบเขตหน้านี้</strong>
+        <p>เก็บข้อมูล Community & Co-benefit เท่านั้น ส่วนการติดตามด้วยดาวเทียมและ Heatmap แยกไปอีกระบบ</p>
+      </div>
+    </aside>
+
+    <main id="main-content" class="main-content">
+      <section class="panel is-active" id="panel-dashboard" role="tabpanel" aria-labelledby="tab-dashboard">
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">Evidence dashboard</span>
+            <h2>เห็นภาพรวมว่าโครงการสร้างประโยชน์ด้านใดมากหรือน้อย</h2>
+            <p>กรองตามปี ประเภทพื้นที่ จังหวัด หรือชุมชน แล้วกดที่ SDG เพื่อดูหลักฐานต้นทาง</p>
+          </div>
+          <div class="heading-actions">
+            <button class="button button-secondary" id="clear-demo-button" type="button">ลบข้อมูลตัวอย่าง</button>
+            <button class="button button-primary" data-open-tab="entry" type="button">เพิ่มรายการใหม่</button>
+          </div>
+        </div>
+
+        <div class="demo-banner" id="demo-banner">
+          <div>
+            <strong>กำลังแสดงข้อมูลตัวอย่างเพื่อสาธิตหน้าจอ</strong>
+            <p>ข้อมูลตัวอย่างไม่ใช่ผลกระทบที่ตรวจสอบแล้ว และสามารถลบออกได้ทันที</p>
+          </div>
+          <button type="button" class="icon-button" id="dismiss-demo-banner" aria-label="ซ่อนข้อความ">×</button>
+        </div>
+
+        <section class="filter-card" aria-label="ตัวกรอง dashboard">
+          <label>
+            <span>ปีโครงการ</span>
+            <select id="filter-year"><option value="all">ทุกปี</option></select>
+          </label>
+          <label>
+            <span>ประเภทพื้นที่</span>
+            <select id="filter-project-type">
+              <option value="all">ทุกประเภท</option>
+              <option value="community">ป่าชุมชน</option>
+              <option value="private">ป่าบุคคลภายนอก</option>
+            </select>
+          </label>
+          <label>
+            <span>จังหวัด</span>
+            <select id="filter-province"><option value="all">ทุกจังหวัด</option></select>
+          </label>
+          <label>
+            <span>ชุมชน / พื้นที่</span>
+            <select id="filter-community"><option value="all">ทุกพื้นที่</option></select>
+          </label>
+          <button class="button button-ghost filter-reset" id="reset-filters" type="button">ล้างตัวกรอง</button>
+        </section>
+
+        <section class="kpi-grid" aria-label="ตัวชี้วัดสำคัญ">
+          <article class="kpi-card">
+            <span>รายการหลักฐาน</span>
+            <strong id="kpi-entries">0</strong>
+            <small>กิจกรรมหรือผลลัพธ์ที่บันทึก</small>
+          </article>
+          <article class="kpi-card">
+            <span>รูปและวิดีโอ</span>
+            <strong id="kpi-media">0</strong>
+            <small>ไฟล์หลักฐานในระบบ</small>
+          </article>
+          <article class="kpi-card">
+            <span>พื้นที่ที่มีข้อมูล</span>
+            <strong id="kpi-locations">0</strong>
+            <small>ชุมชนหรือจังหวัดไม่ซ้ำกัน</small>
+          </article>
+          <article class="kpi-card">
+            <span>มูลค่าที่บันทึก</span>
+            <strong id="kpi-amount">฿0</strong>
+            <small>ยอดเงินสนับสนุนหรือมูลค่ากิจกรรม</small>
+          </article>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="chart-card">
+            <div class="card-heading">
+              <div>
+                <span class="eyebrow">SDG mix</span>
+                <h3>สัดส่วนหลักฐานตามกรอบเป้าหมาย</h3>
+              </div>
+              <button class="text-button" id="show-all-sdg" type="button">แสดงทั้งหมด</button>
+            </div>
+            <div class="donut-layout">
+              <div class="donut-wrap" id="donut-chart" aria-label="กราฟวงกลมแสดงสัดส่วนรายการตาม SDG"></div>
+              <div class="chart-legend" id="chart-legend"></div>
+            </div>
+            <p class="chart-note">เปอร์เซ็นต์คำนวณจากจำนวนรายการที่บันทึก ไม่ใช่การรับรองระดับผลกระทบ</p>
+          </section>
+
+          <section class="insight-card">
+            <div class="card-heading">
+              <div>
+                <span class="eyebrow">Selected focus</span>
+                <h3 id="focus-title">หลักฐานทั้งหมด</h3>
+              </div>
+              <span class="count-badge" id="focus-count">0 รายการ</span>
+            </div>
+            <p id="focus-description">กดที่ส่วนของกราฟหรือการ์ด SDG เพื่อเจาะดูรายการและไฟล์หลักฐาน</p>
+            <div class="focus-media" id="focus-media"></div>
+          </section>
+        </div>
+
+        <section class="section-block">
+          <div class="section-heading-row">
+            <div>
+              <span class="eyebrow">SDG framework</span>
+              <h3>กรอบเป้าหมายและหลักฐานที่ควรเก็บ</h3>
+            </div>
+            <span class="helper-text">อ้างอิงจากไฟล์ Direction ที่แนบมา</span>
+          </div>
+          <div class="sdg-grid" id="sdg-grid"></div>
+        </section>
+
+        <section class="section-block">
+          <div class="section-heading-row">
+            <div>
+              <span class="eyebrow">Recent evidence</span>
+              <h3>รายการล่าสุด</h3>
+            </div>
+            <button class="text-button" data-open-tab="library" type="button">เปิดคลังสื่อ →</button>
+          </div>
+          <div class="evidence-list" id="recent-evidence"></div>
+        </section>
+      </section>
+
+      <section class="panel" id="panel-entry" role="tabpanel" aria-labelledby="tab-entry" hidden>
+        <div class="page-heading compact">
+          <div>
+            <span class="eyebrow">New evidence record</span>
+            <h2>เพิ่มข้อมูลกิจกรรมและหลักฐาน</h2>
+            <p>รายละเอียดไม่บังคับให้เหมือนกันทุก SDG เพื่อรองรับกิจกรรมที่มีลักษณะแตกต่างกัน</p>
+          </div>
+        </div>
+
+        <form id="evidence-form" class="entry-layout">
+          <div class="form-column">
+            <section class="form-card">
+              <div class="form-card-heading">
+                <span class="step-number">1</span>
+                <div><h3>เลือกกรอบเป้าหมาย</h3><p>เลือกหัวข้อหลักที่รายการนี้ต้องการสื่อสาร</p></div>
+              </div>
+              <div class="sdg-choice-grid" id="sdg-choice-grid"></div>
+              <input type="hidden" id="entry-sdg" name="sdg" required>
+              <div class="selected-sdg-detail" id="selected-sdg-detail" aria-live="polite"></div>
+            </section>
+
+            <section class="form-card">
+              <div class="form-card-heading">
+                <span class="step-number">2</span>
+                <div><h3>ระบุพื้นที่และช่วงเวลา</h3><p>แยกป่าชุมชนกับป่าบุคคลภายนอกตามแนวทางประชุม</p></div>
+              </div>
+              <div class="field-grid two-columns">
+                <label class="field">
+                  <span>ประเภทพื้นที่ <b>*</b></span>
+                  <select id="entry-project-type" required>
+                    <option value="">เลือกประเภทพื้นที่</option>
+                    <option value="community">ป่าชุมชน</option>
+                    <option value="private">ป่าบุคคลภายนอก</option>
+                  </select>
+                </label>
+                <label class="field">
+                  <span>จังหวัด <b>*</b></span>
+                  <select id="entry-province" required><option value="">เลือกจังหวัด</option></select>
+                </label>
+                <label class="field field-wide" id="community-select-field">
+                  <span>ชุมชน / พื้นที่ <b>*</b></span>
+                  <select id="entry-community" required><option value="">เลือกชุมชนหรือพื้นที่</option></select>
+                </label>
+                <label class="field field-wide is-hidden" id="community-custom-field">
+                  <span>ระบุชื่อชุมชนหรือพื้นที่ใหม่ <b>*</b></span>
+                  <input id="entry-community-custom" type="text" maxlength="120" placeholder="เช่น บ้านโคกยูง อ.เกาะลันตา">
+                </label>
+                <label class="field">
+                  <span>ปีโครงการ <b>*</b></span>
+                  <select id="entry-year" required></select>
+                </label>
+                <label class="field">
+                  <span>วันที่เกิดกิจกรรม</span>
+                  <input id="entry-date" type="date">
+                </label>
+              </div>
+            </section>
+
+            <section class="form-card">
+              <div class="form-card-heading">
+                <span class="step-number">3</span>
+                <div><h3>บันทึกรายละเอียด</h3><p>ใช้ข้อความอิสระ ไม่บังคับเป็น dropdown เพราะแต่ละกิจกรรมไม่เหมือนกัน</p></div>
+              </div>
+              <div class="field-grid two-columns">
+                <label class="field field-wide">
+                  <span>ชื่อเรื่อง <b>*</b></span>
+                  <input id="entry-title" type="text" required maxlength="160" placeholder="เช่น ติดตามการใช้เงินสนับสนุนชุมชน 200,000 บาท">
+                </label>
+                <label class="field">
+                  <span>มูลค่าหรือเงินสนับสนุน (บาท)</span>
+                  <input id="entry-amount" type="number" min="0" step="1" inputmode="decimal" placeholder="200000">
+                </label>
+                <label class="field">
+                  <span>จำนวนผู้ได้รับประโยชน์</span>
+                  <input id="entry-beneficiaries" type="number" min="0" step="1" inputmode="numeric" placeholder="ไม่ทราบสามารถเว้นว่างได้">
+                </label>
+                <label class="field field-wide">
+                  <span>รายละเอียดกิจกรรมหรือผลลัพธ์ <b>*</b></span>
+                  <textarea id="entry-description" required rows="6" maxlength="4000" placeholder="ระบุว่าเกิดอะไรขึ้น ใครได้รับประโยชน์ ใช้เงินหรือทรัพยากรอย่างไร และหลักฐานนี้แสดงอะไร"></textarea>
+                </label>
+                <label class="field">
+                  <span>แหล่งข้อมูล</span>
+                  <input id="entry-source" type="text" maxlength="220" placeholder="เช่น ทีมพื้นที่ ชุมชน หรือหน่วยงาน ทช.">
+                </label>
+                <label class="field">
+                  <span>สถานะการตรวจสอบ</span>
+                  <select id="entry-status">
+                    <option value="draft">ข้อมูลร่าง</option>
+                    <option value="review">รอตรวจสอบ</option>
+                    <option value="verified">ตรวจสอบแล้ว</option>
+                  </select>
+                </label>
+                <label class="checkbox-field field-wide">
+                  <input id="entry-consent" type="checkbox">
+                  <span><strong>ยืนยันว่ามีสิทธิ์ใช้สื่อและข้อมูลนี้</strong><small>ควรมี consent ก่อนนำภาพ เสียง หรือวิดีโอของบุคคลไปเผยแพร่ภายนอก</small></span>
+                </label>
+              </div>
+            </section>
+          </div>
+
+          <aside class="upload-column">
+            <section class="form-card upload-card">
+              <div class="form-card-heading">
+                <span class="step-number">4</span>
+                <div><h3>อัปโหลดรูปหรือวิดีโอ</h3><p>รองรับหลายไฟล์ในรายการเดียว</p></div>
+              </div>
+              <label class="drop-zone" id="drop-zone" for="media-input">
+                <input id="media-input" type="file" accept="image/*,video/mp4,video/webm,video/quicktime" multiple hidden>
+                <span class="upload-icon" aria-hidden="true">⇧</span>
+                <strong>ลากไฟล์มาวาง หรือกดเลือกไฟล์</strong>
+                <span>JPG, PNG, WEBP, MP4, WEBM, MOV</span>
+                <small>สูงสุด 250 MB ต่อไฟล์ ทั้งนี้ขึ้นกับพื้นที่ว่างของเบราว์เซอร์</small>
+              </label>
+              <div class="upload-summary" id="upload-summary">ยังไม่ได้เลือกไฟล์</div>
+              <div class="pending-media" id="pending-media"></div>
+            </section>
+
+            <section class="form-card form-submit-card">
+              <h3>ตรวจสอบก่อนบันทึก</h3>
+              <ul>
+                <li>รายการต้องมี SDG ประเภทพื้นที่ จังหวัด และรายละเอียด</li>
+                <li>ไฟล์วิดีโอจะเก็บในเบราว์เซอร์เครื่องนี้ ไม่ได้ขึ้น cloud</li>
+                <li>ข้อมูลที่ยังไม่มีหลักฐานยืนยันควรตั้งสถานะเป็น “ข้อมูลร่าง”</li>
+              </ul>
+              <button class="button button-primary button-full" type="submit" id="save-entry-button">บันทึกรายการและไฟล์</button>
+              <button class="button button-ghost button-full" type="reset" id="reset-form-button">ล้างแบบฟอร์ม</button>
+            </section>
+          </aside>
+        </form>
+      </section>
+
+      <section class="panel" id="panel-library" role="tabpanel" aria-labelledby="tab-library" hidden>
+        <div class="page-heading">
+          <div>
+            <span class="eyebrow">Media evidence library</span>
+            <h2>คลังรูปภาพและวิดีโอ</h2>
+            <p>ค้นหาไฟล์ตาม SDG ประเภทสื่อ จังหวัด ชุมชน หรือคำในรายละเอียด</p>
+          </div>
+          <button class="button button-primary" data-open-tab="entry" type="button">อัปโหลดเพิ่ม</button>
+        </div>
+
+        <section class="library-toolbar">
+          <label class="search-field">
+            <span class="sr-only">ค้นหาคลังสื่อ</span>
+            <input id="library-search" type="search" placeholder="ค้นหาชื่อเรื่อง ชุมชน จังหวัด หรือรายละเอียด">
+          </label>
+          <select id="library-sdg"><option value="all">ทุก SDG</option></select>
+          <select id="library-type">
+            <option value="all">รูปและวิดีโอทั้งหมด</option>
+            <option value="image">เฉพาะรูปภาพ</option>
+            <option value="video">เฉพาะวิดีโอ</option>
+            <option value="none">รายการที่ยังไม่มีไฟล์</option>
+          </select>
+          <select id="library-status">
+            <option value="all">ทุกสถานะ</option>
+            <option value="draft">ข้อมูลร่าง</option>
+            <option value="review">รอตรวจสอบ</option>
+            <option value="verified">ตรวจสอบแล้ว</option>
+          </select>
+        </section>
+
+        <div class="library-grid" id="library-grid"></div>
+      </section>
+
+      <section class="panel" id="panel-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <div class="page-heading compact">
+          <div>
+            <span class="eyebrow">Data management</span>
+            <h2>สำรองและจัดการข้อมูล</h2>
+            <p>เวอร์ชันนี้เป็น Static MVP จึงเก็บข้อมูลใน IndexedDB ของเบราว์เซอร์แต่ละเครื่อง</p>
+          </div>
+        </div>
+
+        <div class="settings-grid">
+          <section class="settings-card">
+            <span class="settings-icon">↓</span>
+            <h3>ส่งออกข้อมูล Metadata</h3>
+            <p>ดาวน์โหลดรายการกิจกรรมและรายละเอียดเป็น JSON สำหรับสำรองหรือส่งต่อให้ทีมพัฒนา backend</p>
+            <button class="button button-secondary" id="settings-export" type="button">ดาวน์โหลด JSON</button>
+          </section>
+          <section class="settings-card">
+            <span class="settings-icon">↑</span>
+            <h3>นำเข้าข้อมูล Metadata</h3>
+            <p>นำเข้ารายการจากไฟล์ JSON ที่เคยส่งออก ไฟล์รูปและวิดีโอไม่รวมอยู่ใน JSON</p>
+            <label class="button button-secondary file-button">เลือกไฟล์ JSON<input id="import-input" type="file" accept="application/json" hidden></label>
+          </section>
+          <section class="settings-card">
+            <span class="settings-icon">◉</span>
+            <h3>ตรวจพื้นที่จัดเก็บ</h3>
+            <p id="storage-estimate">กำลังตรวจสอบพื้นที่ที่เบราว์เซอร์อนุญาตให้ใช้งาน…</p>
+            <button class="button button-ghost" id="refresh-storage" type="button">ตรวจอีกครั้ง</button>
+          </section>
+          <section class="settings-card danger-card">
+            <span class="settings-icon">×</span>
+            <h3>ล้างข้อมูลทั้งหมด</h3>
+            <p>ลบรายการ รูปภาพ และวิดีโอทั้งหมดที่เก็บไว้ในเบราว์เซอร์เครื่องนี้ การดำเนินการย้อนกลับไม่ได้</p>
+            <button class="button button-danger" id="clear-all-button" type="button">ล้างข้อมูลทั้งหมด</button>
+          </section>
+        </div>
+
+        <section class="architecture-note">
+          <div>
+            <span class="eyebrow">Production upgrade</span>
+            <h3>สิ่งที่ต้องเพิ่มเมื่อใช้งานจริงหลายคน</h3>
+          </div>
+          <ol>
+            <li><strong>Authentication:</strong> ระบุผู้บันทึกและสิทธิ์เผยแพร่</li>
+            <li><strong>Object storage:</strong> เก็บวิดีโอใน Cloudflare R2, S3 หรือ Vercel Blob</li>
+            <li><strong>Database:</strong> เก็บ Metadata กลาง เพื่อเปิดดูข้ามอุปกรณ์</li>
+            <li><strong>Consent & audit:</strong> ประวัติการแก้ไข สิทธิ์ใช้สื่อ และสถานะตรวจสอบ</li>
+          </ol>
+        </section>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="media-dialog" id="media-dialog">
+    <button class="dialog-close" id="dialog-close" type="button" aria-label="ปิด">×</button>
+    <div id="dialog-content"></div>
+  </dialog>
+
+  <dialog class="confirm-dialog" id="confirm-dialog">
+    <form method="dialog">
+      <h3 id="confirm-title">ยืนยันการดำเนินการ</h3>
+      <p id="confirm-message"></p>
+      <div class="dialog-actions">
+        <button class="button button-ghost" value="cancel">ยกเลิก</button>
+        <button class="button button-danger" id="confirm-action" value="confirm">ยืนยัน</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+  <template id="empty-template">
+    <div class="empty-state">
+      <span aria-hidden="true">◇</span>
+      <h3>ยังไม่มีข้อมูลในส่วนนี้</h3>
+      <p>เริ่มจากเพิ่มรายการกิจกรรมและแนบรูปหรือวิดีโอ</p>
+      <button class="button button-primary" data-open-tab="entry" type="button">เพิ่มหลักฐาน</button>
+    </div>
+  </template>
+</body>
+</html>
