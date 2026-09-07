@@ -15,26 +15,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-pages:
+  ensure-pages:
     runs-on: ubuntu-latest
-    outputs:
-      enabled: ${{ steps.check.outputs.enabled }}
     steps:
-      - name: Check whether GitHub Pages is enabled
-        id: check
+      - name: Ensure GitHub Pages is enabled for Actions
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
+
           if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
-            echo "enabled=true" >> "$GITHUB_OUTPUT"
+            echo "GitHub Pages is already enabled."
           else
-            echo "enabled=false" >> "$GITHUB_OUTPUT"
-            echo "GitHub Pages is not enabled yet. Open Settings > Pages and select GitHub Actions, then run this workflow again."
+            echo "GitHub Pages is not enabled; creating a Pages site using GitHub Actions."
+            gh api \
+              --method POST \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "repos/${GITHUB_REPOSITORY}/pages" \
+              -f build_type=workflow
           fi
 
+          # Verify Pages is available before the deployment job starts.
+          for attempt in 1 2 3 4 5; do
+            if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+              echo "GitHub Pages is ready."
+              exit 0
+            fi
+            sleep 2
+          done
+
+          echo "GitHub Pages could not be enabled automatically."
+          exit 1
+
   deploy:
-    needs: check-pages
-    if: needs.check-pages.outputs.enabled == 'true'
+    needs: ensure-pages
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
